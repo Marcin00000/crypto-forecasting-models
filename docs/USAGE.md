@@ -57,7 +57,8 @@ Wrappery Foundation Models zwracają prognozowany zwrot, a nie taki sam zestaw s
 
 Programy treningowe wymagają przygotowanych zbiorów i metadanych obsługiwanych przez dany loader.
 Katalog `datasets/prepared` w przykładach oznacza dane dostarczone przez użytkownika.
-Pełny pipeline przygotowania danych i zestawy ewaluacyjne nie są częścią tego wydania.
+Kod przygotowania danych i ewaluatory są dostępne. Dane i gotowe wyniki pozostają lokalnie;
+[pełna instrukcja](WORKFLOW.md) opisuje kolejne etapy.
 
 Domyślnym przykładem treningu sieci jest 100 epok. XGBoost i Random Forest mają odrębny sposób
 sterowania wielkością zespołu drzew. Rodziny treningowe uruchamia się w osobnych procesach,

@@ -64,8 +64,7 @@ python lstm_signal_model/signal_train.py --data_path datasets/prepared --epochs 
 ```
 
 Polecenie uruchamia rzeczywisty trening i zapisuje artefakty.
-Format zbioru musi odpowiadać loaderowi tej rodziny. Pipeline tworzenia zbiorów nie jest
-dołączony do obecnego wydania.
+Format zbioru musi odpowiadać loaderowi tej rodziny. [Pipeline przygotowania danych](../data_preparation/USAGE.md) jest dostępny w repozytorium.
 
 ## Typowe problemy
 
@@ -74,3 +73,11 @@ dołączony do obecnego wydania.
 - Za krótka historia: należy zwiększyć bufor danych, uwzględniając rozgrzewkę wskaźników.
 - Wynik liczbowy bez użytecznych sygnałów: jakość wymaga osobnej oceny poza próbką;
   poprawne wczytanie modelu nie potwierdza skuteczności prognozy.
+
+## Ewaluacja i Optuna
+
+Ewaluator: `lstm_signal_model/signal_test.py`, z argumentami `--model_dir` i `--data_path`.
+Program strojenia: `lstm_signal_model/signal_hyperparameter_tuning.py`.
+
+[Pełny proces](../WORKFLOW.md) opisuje trening, test i użycie tego samego modelu.
+[Instrukcja Optuny](../OPTUNA.md) wyjaśnia dobór parametrów i trening końcowy.

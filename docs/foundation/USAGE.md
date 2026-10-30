@@ -70,3 +70,10 @@ wymagane są właściwe kolumny i zgodna interpretacja danych.
 Brak biblioteki dostawcy lub niezgodna wersja API wymaga dopasowania środowiska.
 Błąd pobierania wag należy odróżnić od błędu kształtu wejścia.
 Wyniki na danych syntetycznych są przykładem technicznym, a nie miarą jakości modelu.
+
+## Ewaluacja
+
+`foundation_models/foundation_test.py` przyjmuje `--model_type`, `--model_name` i `--data_dir`.
+Dla checkpointu po dostrajaniu `--model_name` wskazuje jego katalog.
+Interfejs: `python foundation_models/foundation_test.py --help`.
+W tym wydaniu nie ma osobnego programu Optuny dla Foundation Models.

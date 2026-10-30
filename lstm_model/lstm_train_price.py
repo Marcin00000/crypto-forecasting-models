@@ -240,8 +240,35 @@ def _train_single_model(
     }
 
 
+def load_optuna_training_params(path: str) -> dict:
+    """Map a compatible price-study parameter file to canonical training arguments."""
+    with open(path, encoding="utf-8") as stream:
+        payload = json.load(stream)
+    params = payload.get("params", payload)
+    if params.get("use_batch_norm", True) is not True:
+        raise ValueError("This study uses an unsupported price-model architecture.")
+    if params.get("scheduler_type", "none") != "none":
+        raise ValueError("This study uses a scheduler unsupported by final price training.")
+    supported = {"hidden_size", "num_layers", "dropout", "batch_size", "weight_decay",
+                 "lookback", "horizon", "lr", "seed", "use_log_prices", "early_stopping_patience"}
+    result = {key: value for key, value in params.items() if key in supported}
+    if "learning_rate" in params:
+        result["lr"] = params["learning_rate"]
+    metadata = payload.get("_metadata", {})
+    features = metadata.get("custom_features")
+    if features:
+        result["custom_features"] = list(features)
+        result["feature_set"] = "custom"
+    elif metadata.get("feature_set"):
+        result["feature_set"] = metadata["feature_set"]
+    return result
+
+
 def train_model(**kwargs) -> dict:
     """Wrapper entry point for training single or batch models."""
+    parameter_file = kwargs.pop("load_optuna_params", None)
+    if parameter_file:
+        kwargs = {**load_optuna_training_params(parameter_file), **kwargs}
     return _train_single_model(
         train_path=kwargs.get('train_path', 'data_preparation/prepared_data/E109_prep_eth_universal_max_1m'),
         lookback=kwargs.get('lookback', 48),
@@ -263,7 +290,8 @@ def train_model(**kwargs) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train LSTM Price Prediction model.")
-    parser.add_argument('--train_path', type=str, default='data_preparation/prepared_data/E109_prep_eth_universal_max_1m')
+    parser.add_argument('--train_path', type=str, required=True)
+    parser.add_argument('--load_optuna_params', type=str, default=None)
     parser.add_argument('--lookback', type=int, default=48)
     parser.add_argument('--horizon', type=int, default=12)
     parser.add_argument('--hidden_size', type=int, default=64)
@@ -281,7 +309,16 @@ def main() -> None:
     parser.add_argument('--seed', type=int, default=42)
 
     args = parser.parse_args()
-    train_model(**vars(args))
+    values = vars(args)
+    if args.load_optuna_params:
+        import sys
+        explicit = {part.split("=", 1)[0] for part in sys.argv[1:] if part.startswith("--")}
+        imported = load_optuna_training_params(args.load_optuna_params)
+        values.update({key: value for key, value in imported.items()
+                       if "--" + key not in explicit
+                       and not (key == "use_log_prices" and "--no-use_log_prices" in explicit)})
+        values.pop("load_optuna_params")
+    train_model(**values)
 
 
 if __name__ == "__main__":

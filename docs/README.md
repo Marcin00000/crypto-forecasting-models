@@ -17,3 +17,9 @@ Każda rodzina ma ulotkę `OVERVIEW.md` oraz instrukcję `USAGE.md`.
 
 Przykłady wymagają własnych danych i odpowiednich wag. Nie stanowią wyników eksperymentów
 ani deklaracji skuteczności inwestycyjnej.
+
+## Praca od danych do prognozy
+
+- [Pełny proces](WORKFLOW.md)
+- [Optuna](OPTUNA.md)
+- [Przygotowanie danych: opis](data_preparation/OVERVIEW.md) i [instrukcja](data_preparation/USAGE.md)
