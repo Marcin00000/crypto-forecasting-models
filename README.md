@@ -1,104 +1,35 @@
 # Crypto Forecasting Models
 
-Kod modeli predykcyjnych dla szeregów czasowych kryptowalut oraz niezależne pakiety inferencyjne.
-Repozytorium zawiera rdzeń treningu i inferencji. Wagi modeli, zbiory danych, wyniki eksperymentów
-oraz zestawy testowe są przechowywane osobno.
+Kod treningu modeli szeregów czasowych kryptowalut i niezależne pakiety inferencyjne.
+Repozytorium udostępnia sześć rodzin modeli i wspólny silnik cech `feature_engineering.py`.
+Wagi, zbiory danych oraz wyniki eksperymentów są przechowywane osobno.
 
-| Rodzina | Kod treningowy / integracja | Pakiet inferencyjny |
-|---|---|---|
-| LSTM Log-Return | lstm_logreturn_model/ | lstm_model_package/ |
-| LSTM Signal | lstm_signal_model/ | signal_model_package/ |
-| XGBoost | xgb_model/ | xgb_model_package/ |
-| Random Forest | rf_model/ | rf_model_package/ |
-| LSTM Price | lstm_model/ | lstm_price_model_package/ |
-| Chronos i TimesFM | foundation_models/ | wrappery w foundation_models/common/ |
+| Rodzina | Ulotka | Instrukcja | Kod / pakiet |
+|---|---|---|---|
+| LSTM Log-Return | [Opis](docs/lstm_logreturn/OVERVIEW.md) | [Użycie](docs/lstm_logreturn/USAGE.md) | `lstm_logreturn_model/` · `lstm_model_package/` |
+| LSTM Signal | [Opis](docs/lstm_signal/OVERVIEW.md) | [Użycie](docs/lstm_signal/USAGE.md) | `lstm_signal_model/` · `signal_model_package/` |
+| XGBoost | [Opis](docs/xgb/OVERVIEW.md) | [Użycie](docs/xgb/USAGE.md) | `xgb_model/` · `xgb_model_package/` |
+| Random Forest | [Opis](docs/rf/OVERVIEW.md) | [Użycie](docs/rf/USAGE.md) | `rf_model/` · `rf_model_package/` |
+| LSTM Price | [Opis](docs/lstm_price/OVERVIEW.md) | [Użycie](docs/lstm_price/USAGE.md) | `lstm_model/` · `lstm_price_model_package/` |
+| Foundation Models | [Opis](docs/foundation/OVERVIEW.md) | [Użycie](docs/foundation/USAGE.md) | `foundation_models/` |
 
-Wspólny silnik cech znajduje się w feature_engineering.py. Pakiety inferencyjne zawierają
-własne moduły cech, aby mogły być używane niezależnie od kodu treningowego.
+## Początek pracy
 
-## Środowisko
+[Wspólna instrukcja](docs/USAGE.md) opisuje środowisko, dane, artefakty i interpretację wyników.
+[Spis dokumentacji](docs/README.md) prowadzi do ulotek i przykładów każdej rodziny.
 
-Kod sprawdzono importowo w Pythonie 3.14 z bibliotekami wymienionymi w requirements.txt.
-PyTorch należy zainstalować w wersji odpowiedniej dla CPU lub używanej karty graficznej.
-Instalacja pozostałych zależności:
-
-~~~powershell
+```powershell
 $env:PYTHONUTF8 = "1"
 python -m pip install -r requirements.txt
-~~~
+```
 
-Integracje Foundation Models wymagają dodatkowo bibliotek chronos-forecasting lub timesfm
-oraz ich zależności, zgodnych z wybranym modelem bazowym. Pobranie wag tych modeli odbywa się
-dopiero podczas tworzenia odpowiedniego wrappera.
+PyTorch instaluje się osobno w wariancie odpowiednim dla CPU lub GPU.
+Dodatkowe biblioteki Foundation Models opisuje instrukcja tej rodziny.
+Dane, wagi i skalery do przykładów muszą zostać dostarczone przez użytkownika.
+Pełny pipeline przygotowania danych i zestawy testowe nie są częścią tego wydania.
 
-## Trening
+## Prywatność i zmiany
 
-Kod przyjmuje przygotowane dane dostarczone przez użytkownika. Katalog danych powinien zawierać
-train.csv oraz pliki opisujące kolumny i skalowanie wymagane przez wybrany loader.
-Pełny pipeline przygotowania danych jest poza zakresem tego wydania.
-
-~~~powershell
-python lstm_logreturn_model/lstm_train.py --help
-python lstm_signal_model/signal_train.py --help
-python xgb_model/xgb_train.py --help
-python rf_model/rf_train.py --help
-python lstm_model/lstm_train_price.py --help
-python foundation_models/foundation_finetune.py --help
-~~~
-
-Przykład treningu sieci na dostarczonych danych:
-
-~~~powershell
-python lstm_logreturn_model/lstm_train.py --data_path datasets/prepared --epochs 100
-~~~
-
-Każdy program treningowy należy uruchamiać w osobnym procesie, z katalogu głównego repozytorium.
-Moduły rodzin używają lokalnych pakietów common o tej samej nazwie.
-
-## Inferencja
-
-~~~python
-from xgb_model_package import XGBModelPackage
-
-package = XGBModelPackage.from_directory("models/xgb/my_model")
-signals = package.predict_batch(ohlcv_dataframe, data_mode="raw")
-~~~
-
-Dla pozostałych rodzin dostępne są LSTMModelPackage, SignalModelPackage, RFModelPackage
-oraz LSTMPriceModelPackage w odpowiadających im pakietach.
-Każdy model wymaga konfiguracji, wag i odpowiednich skalerów.
-Signal z architekturą submodel_fusion wymaga również przekazania listy katalogów submodeli.
-Szczegóły parametrów opisują docstringi klas i metod.
-
-## Aktualizacja publicznego rdzenia
-
-Narzędzie tools/update_core.py odczytuje wyłącznie pliki z zatwierdzonej listy tools/core_files.json.
-Nie korzysta z historii ani konfiguracji Git katalogu źródłowego.
-
-Podgląd zmian:
-
-~~~powershell
-python tools/update_core.py --source ../research-source
-~~~
-
-Zastosowanie zmian lokalnie:
-
-~~~powershell
-python tools/update_core.py --source ../research-source --apply
-~~~
-
-Zastosowanie zmian, commit i publikacja do origin:
-
-~~~powershell
-python tools/update_core.py --source ../research-source --publish
-~~~
-
-Przed publikacją należy przejrzeć różnice w kodzie. Automatyczna kontrola blokuje typowe
-prywatne ścieżki, adresy e-mail i formaty tokenów; nie zastępuje przeglądu treści.
-Nowe pliki i zależności wymagają jawnego rozszerzenia listy eksportu.
-Własne zmiany w publicznych kopiach plików zatrzymują aktualizację i wymagają ręcznego scalenia.
-Usunięcia plików nie są propagowane automatycznie.
-
-Narzędzie aktualizujące jest jedynym skryptem utrzymaniowym w tym wydaniu.
-Skrypty eksperymentów, ewaluatory, tuning, testy i rozbudowana dokumentacja nie są częścią rdzenia.
-Pomocnicze obliczenia metryk i wykresów wymagane przez trening pozostają w modułach common.
+[Polityka publikacji](docs/PRIVACY.md) opisuje wykluczenia, lokalną kontrolę przed push
+i wymagane sprawdzenie CI. Repozytorium nie zawiera automatycznego eksportera ani katalogu `tools`.
+Zmiany trafiają na `main` przez pull request po sprawdzeniu prywatności.
