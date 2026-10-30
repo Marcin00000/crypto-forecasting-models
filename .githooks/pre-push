@@ -1,0 +1,35 @@
+#!/bin/sh
+set -eu
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+baseline=f14f9a04d8d15494555d88a68168a5de4124b01f
+
+# The initial audited history predates the file-name publication policy.
+git cat-file -e "$baseline^{commit}"
+for commit in $(git rev-list --all "^$baseline"); do
+    paths=$(git -c core.quotePath=false diff-tree --root --no-commit-id --name-only -r --diff-filter=ACMRT "$commit")
+    while IFS= read -r path; do
+        [ -n "$path" ] || continue
+        normalized=$(printf "%s" "$path" | LC_ALL=C tr "[:upper:]" "[:lower:]")
+        case "$normalized" in
+            *\"*|*\\*|.local/*|.agents/*|scratch/*|archive/*|tools/*|*/tools/*|.env*|*/.env*|datasets/*|models/*|folder_z_modelami/*|*/checkpoints/*|*/results/*|*/lstm_lr_models/*|*/signal_models/*|*/xgb_models/*|*/rf_models/*|*/lstm_models/*|*/lstm_lr_data/*|*/signal_data/*|*/xgb_data/*|*/rf_data/*|*/lstm_data/*|*/foundation_data/*|*rclone*.conf|*credentials*.json|*token*.json|*service-account*.json|*.pem|*.key|*.p12|*.pfx|*.csv|*.tsv|*.parquet|*.npy|*.npz|*.pkl|*.pickle|*.joblib|*.pth|*.pt|*.ckpt|*.safetensors|*.onnx|*.h5|*.hdf5|*.ubj|*.bin|*.log|*.sarif|*.db|*.sqlite*|*.zip|*.7z|*.tar|*.gz)
+                printf 'Blocked publication path in commit %s: %s\n' "$commit" "$path" >&2
+                exit 1 ;;
+        esac
+    done <<EOF
+$paths
+EOF
+done
+
+scanner=$(printenv GITLEAKS_BINARY || true)
+if [ -n "$scanner" ]; then
+    :
+elif command -v gitleaks >/dev/null 2>&1; then
+    scanner=$(command -v gitleaks)
+elif [ -f "$root/.local/security-bin/gitleaks.exe" ]; then
+    scanner="$root/.local/security-bin/gitleaks.exe"
+else
+    printf 'Gitleaks is required before publishing. See docs/PRIVACY.md.\n' >&2
+    exit 1
+fi
+"$scanner" git . --config .gitleaks.toml --log-opts="--all" --redact --no-banner

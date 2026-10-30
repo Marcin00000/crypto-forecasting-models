@@ -1,0 +1,18 @@
+title = "Public model repository privacy checks"
+[extend]
+useDefault = true
+
+[[rules]]
+id = "absolute-windows-path"
+description = "Absolute Windows path in published content"
+regex = '''(?i)\b[a-z]:[\\/][^\r\n"'<>]+'''
+
+[[rules]]
+id = "private-unix-user-path"
+description = "User directory in published content"
+regex = '''/(?:home|Users)/[a-zA-Z0-9_.-]+/'''
+
+[[rules]]
+id = "email-in-published-file"
+description = "Email address requires explicit privacy review"
+regex = '''[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'''
