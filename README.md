@@ -29,11 +29,6 @@ Dane, wagi i skalery do przykładów muszą zostać dostarczone przez użytkowni
 Repozytorium zawiera przygotowanie danych, trening, ewaluatory i pięć programów Optuny.
 Dane oraz testy jednostkowe pozostają poza tym wydaniem.
 
-## Prywatność i zmiany
-
-[Polityka publikacji](docs/PRIVACY.md) opisuje wykluczenia, lokalną kontrolę przed push
-i wymagane sprawdzenie CI. Repozytorium nie zawiera automatycznego eksportera ani katalogu `tools`.
-Zmiany trafiają na `main` przez pull request po sprawdzeniu prywatności.
 
 ## Pełny proces
 
