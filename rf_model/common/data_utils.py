@@ -1,7 +1,7 @@
 """
 Data loading and preparation utilities for Random Forest log-return pipeline.
 
-Re-exports flattening and target scaling utilities.
+Re-exports flattening, target scaling, and test data utilities from modular sub-packages.
 """
 from __future__ import annotations
 
@@ -23,6 +23,15 @@ from .flattening import (
     flatten_features,
     align_features_and_target,
 )
+from .test_data_utils import (
+    load_test_data_only,
+    load_test_csv,
+    _extract_close,
+    find_results_path,
+    load_results,
+    save_results,
+    build_rf_test_summary,
+)
 
 __all__ = [
     'TargetScaler',
@@ -38,6 +47,12 @@ __all__ = [
     'load_prepared_data',
     'prepare_raw_data_on_the_fly',
     'load_data',
+    'load_test_data_only',
+    'load_test_csv',
+    'find_results_path',
+    'load_results',
+    'save_results',
+    'build_rf_test_summary',
 ]
 
 

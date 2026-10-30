@@ -12,7 +12,7 @@ for commit in $(git rev-list --all "^$baseline"); do
         [ -n "$path" ] || continue
         normalized=$(printf "%s" "$path" | LC_ALL=C tr "[:upper:]" "[:lower:]")
         case "$normalized" in
-            *\"*|*\\*|.local/*|.agents/*|scratch/*|archive/*|tools/*|*/tools/*|.env*|*/.env*|datasets/*|models/*|folder_z_modelami/*|*/checkpoints/*|*/results/*|*/lstm_lr_models/*|*/signal_models/*|*/xgb_models/*|*/rf_models/*|*/lstm_models/*|*/lstm_lr_data/*|*/signal_data/*|*/xgb_data/*|*/rf_data/*|*/lstm_data/*|*/foundation_data/*|*rclone*.conf|*credentials*.json|*token*.json|*service-account*.json|*.pem|*.key|*.p12|*.pfx|*.csv|*.tsv|*.parquet|*.npy|*.npz|*.pkl|*.pickle|*.joblib|*.pth|*.pt|*.ckpt|*.safetensors|*.onnx|*.h5|*.hdf5|*.ubj|*.bin|*.log|*.sarif|*.db|*.sqlite*|*.zip|*.7z|*.tar|*.gz)
+            *\"*|*\\*|.local/*|.agents/*|scratch/*|archive/*|tools/*|*/tools/*|.env*|*/.env*|datasets/*|prepared_data/*|*/prepared_data/*|models/*|folder_z_modelami/*|*/checkpoints/*|*/results/*|*/lstm_lr_models/*|*/signal_models/*|*/xgb_models/*|*/rf_models/*|*/lstm_models/*|*/lstm_lr_data/*|*/signal_data/*|*/xgb_data/*|*/rf_data/*|*/lstm_data/*|*/foundation_data/*|*rclone*.conf|*credentials*.json|*token*.json|*service-account*.json|*.pem|*.key|*.p12|*.pfx|*.csv|*.tsv|*.parquet|*.npy|*.npz|*.pkl|*.pickle|*.joblib|*.pth|*.pt|*.ckpt|*.safetensors|*.onnx|*.h5|*.hdf5|*.ubj|*.bin|*.log|*.sarif|*.db|*.sqlite*|*.zip|*.7z|*.tar|*.gz)
                 printf 'Blocked publication path in commit %s: %s\n' "$commit" "$path" >&2
                 exit 1 ;;
         esac

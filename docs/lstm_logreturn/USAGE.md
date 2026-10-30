@@ -48,8 +48,7 @@ python lstm_logreturn_model/lstm_train.py --data_path datasets/prepared --epochs
 ```
 
 Polecenie uruchamia rzeczywisty trening i zapisuje artefakty.
-Format zbioru musi odpowiadać loaderowi tej rodziny. Pipeline tworzenia zbiorów nie jest
-dołączony do obecnego wydania.
+Format zbioru musi odpowiadać loaderowi tej rodziny. [Pipeline przygotowania danych](../data_preparation/USAGE.md) jest dostępny w repozytorium.
 
 ## Typowe problemy
 
@@ -58,3 +57,11 @@ dołączony do obecnego wydania.
 - Za krótka historia: należy zwiększyć bufor danych, uwzględniając rozgrzewkę wskaźników.
 - Wynik liczbowy bez użytecznych sygnałów: jakość wymaga osobnej oceny poza próbką;
   poprawne wczytanie modelu nie potwierdza skuteczności prognozy.
+
+## Ewaluacja i Optuna
+
+Ewaluator: `lstm_logreturn_model/lstm_test.py`, z argumentami `--model_dir` i `--test_path`.
+Program strojenia: `lstm_logreturn_model/lstm_hyperparameter_tuning.py`.
+
+[Pełny proces](../WORKFLOW.md) opisuje trening, test i użycie tego samego modelu.
+[Instrukcja Optuny](../OPTUNA.md) wyjaśnia dobór parametrów i trening końcowy.

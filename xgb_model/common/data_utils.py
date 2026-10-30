@@ -250,6 +250,8 @@ def load_prepared_data(data_path, flattening_method=None, feature_set=None,
     return data, metadata
 
 
+# Test data loading delegated to test_data_utils
+from .test_data_utils import load_test_data_only  # noqa: F401
 
 
 def prepare_raw_data_on_the_fly(df, features=None, lookback=48, horizon=12,

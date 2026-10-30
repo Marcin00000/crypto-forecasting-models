@@ -26,10 +26,16 @@ python -m pip install -r requirements.txt
 PyTorch instaluje się osobno w wariancie odpowiednim dla CPU lub GPU.
 Dodatkowe biblioteki Foundation Models opisuje instrukcja tej rodziny.
 Dane, wagi i skalery do przykładów muszą zostać dostarczone przez użytkownika.
-Pełny pipeline przygotowania danych i zestawy testowe nie są częścią tego wydania.
+Repozytorium zawiera przygotowanie danych, trening, ewaluatory i pięć programów Optuny.
+Dane oraz testy jednostkowe pozostają poza tym wydaniem.
 
 ## Prywatność i zmiany
 
 [Polityka publikacji](docs/PRIVACY.md) opisuje wykluczenia, lokalną kontrolę przed push
 i wymagane sprawdzenie CI. Repozytorium nie zawiera automatycznego eksportera ani katalogu `tools`.
 Zmiany trafiają na `main` przez pull request po sprawdzeniu prywatności.
+
+## Pełny proces
+
+[Przygotowanie danych, trening, test i inferencja](docs/WORKFLOW.md) prowadzi przez kolejne etapy.
+[Optuna](docs/OPTUNA.md) opisuje strojenie i wczytywanie parametrów.
